@@ -15,6 +15,7 @@ warnings.filterwarnings('ignore')
 
 import imageio
 
+import blendify
 from blendify import scene
 from blendify.materials import PrincipledBSDFMaterial, PlasticMaterial
 from blendify.colors import UniformColors
@@ -23,6 +24,15 @@ from blendify.colors import UniformColors
 def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xyz, sun_angle_deg):
 
   scene.clear()
+
+  keys = [x for x in scene.lights.keys()]
+  for k in keys:
+    scene.lights.remove(k)
+
+  keys = [x for x in scene.renderables.keys()]
+  for k in keys:
+    scene.renderables.remove(k)
+
 
   # Add light; https://virtualhumans.mpi-inf.mpg.de/blendify/api/blendify.lights.html#blendify.lights.collection.LightsCollection.add_sun
   #scene.lights.add_sun(strength=600, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
