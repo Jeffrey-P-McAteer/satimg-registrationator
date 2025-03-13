@@ -27,14 +27,14 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
 
   # Add light; https://virtualhumans.mpi-inf.mpg.de/blendify/api/blendify.lights.html#blendify.lights.collection.LightsCollection.add_sun
   #scene.lights.add_sun(strength=600, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
-  scene.lights.add_point(strength=12000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(-2, -2, 0), translation=(-0.5, -0.5, 16))
+  scene.lights.add_point(strength=14000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(0, 0, 0), translation=(-2, -2, 28))
 
   # Add camera
   scene.set_perspective_camera((img_w_px, img_h_px), fov_x=0.7, rotation_mode='look_at', rotation=(0, 0, 0), translation=camera_location_xyz)
 
   # Create material
   material = PrincipledBSDFMaterial(
-    specular=0.1, roughness=2.6, sheen_tint=0.0, ior=5.0
+    specular=0.0, roughness=2.6, sheen_tint=0.0, ior=5.0
   )
   # material = PlasticMaterial(
   #   specular=0.1, roughness=2.6, clearcoat_roughness=0.6
@@ -68,5 +68,5 @@ for y in range(-12, 13):
   if os.path.exists(shot_img_path):
     imgs_list.append( imageio.imread(shot_img_path) )
 
-imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=2)
+imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=4)
 
