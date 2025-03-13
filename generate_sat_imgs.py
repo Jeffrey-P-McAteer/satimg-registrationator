@@ -27,7 +27,7 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
 
   # Add light; https://virtualhumans.mpi-inf.mpg.de/blendify/api/blendify.lights.html#blendify.lights.collection.LightsCollection.add_sun
   scene.lights.set_background_light(strength=0.1, color=(1.0, 1.0, 1.0))
-  #scene.lights.add_sun(strength=3.5, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
+  scene.lights.add_sun(strength=3.0, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
   #scene.lights.add_point(strength=14000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(0, 0, 0), translation=(-2, -2, 28))
   scene.lights.add_point(strength=14000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(0, 0, 0), translation=(-2, -2, 28))
 
