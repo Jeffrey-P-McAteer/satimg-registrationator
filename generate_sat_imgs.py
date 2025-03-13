@@ -23,6 +23,11 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, height_m, pitch_de
   color = UniformColors((0.0, 1.0, 0.0))
   # Add cube mesh
   scene.renderables.add_cube_mesh(1.0, material, color)
+
+  # "Ground"
+  ground_color = UniformColors((1.0, 1.0, 1.0))
+  scene.renderables.add_cube_mesh(10.0, material, ground_color, translation=(0, 0, -11.0))
+
   # Render scene
   scene.render(filepath=os.path.join(out_dir, f'{file_prefix}.png'))
 
