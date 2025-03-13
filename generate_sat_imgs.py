@@ -17,7 +17,7 @@ import imageio
 
 import blendify
 from blendify import scene
-from blendify.materials import PrincipledBSDFMaterial, PlasticMaterial
+from blendify.materials import PrincipledBSDFMaterial, PlasticMaterial, PrincipledBSDFWireframeMaterial
 from blendify.colors import UniformColors
 
 
@@ -35,7 +35,7 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
   scene.set_perspective_camera((img_w_px, img_h_px), focal_dist=1250, rotation_mode='look_at', rotation=(0, 0, 0), translation=camera_location_xyz)
 
   # Create material
-  material = PrincipledBSDFMaterial(
+  material = PrincipledBSDFWireframeMaterial(
     specular=0.0, roughness=2.6, sheen_tint=0.0, ior=5.0
   )
   # material = PlasticMaterial(
@@ -46,13 +46,13 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
   #color = UniformColors((0.0, 1.0, 0.0))
 
   # Add cube mesh(s)
-  scene.renderables.add_cube_mesh(1.0, material, UniformColors((0.0, 1.0, 0.0)), translation=(0, 0, 0.48))
-  scene.renderables.add_cube_mesh(0.75, material, UniformColors((0.0, 0.0, 1.0)), translation=(0, 1.75, 0.74/2.0 ))
-  scene.renderables.add_cube_mesh(0.75, material, UniformColors((0.0, 0.0, 1.0)), translation=(1.75, 0.5, 0.74/2.0 ))
+  scene.renderables.add_cube_mesh(1.0, material, UniformColors((0.0, 1.0, 0.0)), translation=(0, 0, 0.5))
+  scene.renderables.add_cube_mesh(0.75, material, UniformColors((0.0, 0.0, 1.0)), translation=(0, 1.75, 0.75/2.0 ))
+  scene.renderables.add_cube_mesh(0.75, material, UniformColors((0.0, 0.0, 1.0)), translation=(1.75, 0.5, 0.75/2.0 ))
 
   # "Ground"
   ground_color = UniformColors((207/255.0, 181/255.0, 144/255.0))
-  scene.renderables.add_cube_mesh(100.0, material, ground_color, translation=(0, 0, -50.0))
+  scene.renderables.add_cube_mesh(100.0, material, ground_color, translation=(0, 0, -49.9))
 
   # Render scene
   out_png = os.path.join(out_dir, f'{file_prefix}.png')
@@ -65,11 +65,24 @@ imgs_folder = os.path.join(REPO_ROOT, 'build', 'imgs')
 os.makedirs(imgs_folder, exist_ok=True)
 
 imgs_list = []
-for y in range(-12, 13):
-  render_one_shot(imgs_folder, f'shot_{y}', 512, 512, (12, y/2.0, 12), 0)
-  shot_img_path = os.path.join(imgs_folder, f'shot_{y}.png')
+
+for y in range(-14, 18):
+  render_one_shot(imgs_folder, f'pass1_{y}', 764, 764, ((y/2.0) + 4.0, (y/2.0) + 1.75, 12), 0)
+  shot_img_path = os.path.join(imgs_folder, f'pass1_{y}.png')
   if os.path.exists(shot_img_path):
     imgs_list.append( imageio.imread(shot_img_path) )
 
-imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=4, palettesize=16*1024)
+imageio.mimsave(os.path.join(imgs_folder, 'pass-1.gif'), imgs_list, fps=8, palettesize=1024)
+
+
+
+imgs_list = []
+
+for y in range(-14, 18):
+  render_one_shot(imgs_folder, f'pass2_{y}', 764, 764, (-1.75, (y/2.0) - 4.0, 14), 0)
+  shot_img_path = os.path.join(imgs_folder, f'pass2_{y}.png')
+  if os.path.exists(shot_img_path):
+    imgs_list.append( imageio.imread(shot_img_path) )
+
+imageio.mimsave(os.path.join(imgs_folder, 'pass-2.gif'), imgs_list, fps=8, palettesize=1024)
 
