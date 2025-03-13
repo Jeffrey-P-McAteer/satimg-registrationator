@@ -26,11 +26,13 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
   scene.clear()
 
   # Add light; https://virtualhumans.mpi-inf.mpg.de/blendify/api/blendify.lights.html#blendify.lights.collection.LightsCollection.add_sun
-  #scene.lights.add_sun(strength=600, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
+  scene.lights.set_background_light(strength=0.1, color=(1.0, 1.0, 1.0))
+  #scene.lights.add_sun(strength=3.5, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
+  #scene.lights.add_point(strength=14000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(0, 0, 0), translation=(-2, -2, 28))
   scene.lights.add_point(strength=14000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(0, 0, 0), translation=(-2, -2, 28))
 
   # Add camera
-  scene.set_perspective_camera((img_w_px, img_h_px), fov_x=0.7, rotation_mode='look_at', rotation=(0, 0, 0), translation=camera_location_xyz)
+  scene.set_perspective_camera((img_w_px, img_h_px), focal_dist=1250, rotation_mode='look_at', rotation=(0, 0, 0), translation=camera_location_xyz)
 
   # Create material
   material = PrincipledBSDFMaterial(
@@ -54,8 +56,9 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
 
   # Render scene
   out_png = os.path.join(out_dir, f'{file_prefix}.png')
-  #scene.render(filepath=os.path.join(out_dir, f'{file_prefix}.png'))
+  #scene.render(filepath=os.path.join(out_dir, f'{file_prefix}.png'), samples=60, verbose=False, aa_filter_width=0)
   scene.preview(out_png)
+
 
 REPO_ROOT = os.path.dirname(__file__)
 imgs_folder = os.path.join(REPO_ROOT, 'build', 'imgs')
