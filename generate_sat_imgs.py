@@ -25,15 +25,6 @@ def render_one_shot(out_dir, file_prefix, img_w_px, img_h_px, camera_location_xy
 
   scene.clear()
 
-  keys = [x for x in scene.lights.keys()]
-  for k in keys:
-    scene.lights.remove(k)
-
-  keys = [x for x in scene.renderables.keys()]
-  for k in keys:
-    scene.renderables.remove(k)
-
-
   # Add light; https://virtualhumans.mpi-inf.mpg.de/blendify/api/blendify.lights.html#blendify.lights.collection.LightsCollection.add_sun
   #scene.lights.add_sun(strength=600, rotation_mode='look_at', rotation=(-2, -2, 0), angular_diameter=0.0093)
   scene.lights.add_point(strength=12000, shadow_soft_size=0.5, rotation_mode='look_at', rotation=(-2, -2, 0), translation=(-0.5, -0.5, 16))
@@ -71,11 +62,11 @@ imgs_folder = os.path.join(REPO_ROOT, 'build', 'imgs')
 os.makedirs(imgs_folder, exist_ok=True)
 
 imgs_list = []
-for y in range(-4, 5):
-  render_one_shot(imgs_folder, f'shot_{y}', 512, 512, (1, y, 12), 0)
+for y in range(-12, 13):
+  render_one_shot(imgs_folder, f'shot_{y}', 512, 512, (12, y/2.0, 12), 0)
   shot_img_path = os.path.join(imgs_folder, f'shot_{y}.png')
   if os.path.exists(shot_img_path):
     imgs_list.append( imageio.imread(shot_img_path) )
 
-imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=1)
+imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=2)
 
