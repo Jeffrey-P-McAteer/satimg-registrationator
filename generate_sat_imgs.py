@@ -71,5 +71,5 @@ for y in range(-12, 13):
   if os.path.exists(shot_img_path):
     imgs_list.append( imageio.imread(shot_img_path) )
 
-imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=4)
+imageio.mimsave(os.path.join(imgs_folder, 'all.gif'), imgs_list, fps=4, palettesize=16*1024)
 
