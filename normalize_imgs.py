@@ -4,6 +4,7 @@
 #   "opencv-python",
 #   "numpy",
 #   "matplotlib",
+#   "imageio",
 # ]
 # ///
 
@@ -14,9 +15,16 @@ import random
 import glob
 import time
 
+# Disable numpy warnings
+import warnings
+warnings.filterwarnings('ignore')
+
 import cv2
 import numpy
 import matplotlib
+
+import imageio
+
 
 
 REPO_ROOT = os.path.dirname(__file__)
@@ -34,6 +42,13 @@ print(f'base_img_path = {base_img_path}')
 base_img = cv2.imread(base_img_path, cv2.IMREAD_COLOR)
 base_img_gray = cv2.cvtColor(base_img, cv2.COLOR_BGR2GRAY)
 base_img_h, base_img_w = base_img_gray.shape
+
+imgs_list = []
+
+#imgs_list.append( imageio.imread(base_img_path) )
+#imgs_list.append( imageio.imread(base_img_path) )
+#imgs_list.append( imageio.imread(base_img_path) )
+#imgs_list.append( imageio.imread(base_img_path) )
 
 for other_img_path in glob.glob(os.path.join(imgs_folder, '*.png')):
   begin_s = time.time()
@@ -65,10 +80,19 @@ for other_img_path in glob.glob(os.path.join(imgs_folder, '*.png')):
 
   homography, mask = cv2.findHomography(p1, p2, cv2.RANSAC)
   transformed_img = cv2.warpPerspective(other_img, homography, (base_img_w, base_img_h))
+
+  # Guarantee same size for .gif
+  transformed_img = cv2.resize(transformed_img, (base_img_w, base_img_h), interpolation=cv2.INTER_AREA)
+
   cv2.imwrite(normalized_img_path, transformed_img)
+
+  imgs_list.append( imageio.imread(normalized_img_path) )
 
   duration_s = time.time() - begin_s
   print(f'{other_img_path} normalized in {duration_s:.2f}s')
+
+imageio.mimsave(os.path.join(normalized_imgs, 'all.gif'), imgs_list, fps=8, palettesize=1024)
+
 
 print(f'Done!')
 
