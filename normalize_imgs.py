@@ -37,6 +37,9 @@ os.makedirs(normalized_imgs, exist_ok=True)
 # Select a random image & use as base
 base_img_path = random.choice([x for x in glob.glob(os.path.join(imgs_folder, '*.png'))])
 
+if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+  base_img_path = sys.argv[1]
+
 print(f'base_img_path = {base_img_path}')
 
 base_img = cv2.imread(base_img_path, cv2.IMREAD_COLOR)
@@ -81,6 +84,10 @@ for other_img_path in glob.glob(os.path.join(imgs_folder, '*.png')):
   homography, mask = cv2.findHomography(p1, p2, cv2.RANSAC)
   transformed_img = cv2.warpPerspective(other_img, homography, (base_img_w, base_img_h))
 
+  #print(f'homography = {homography}')
+  homography_amnt = (homography[0][0] + homography[1][1] + homography[2][2])/3.0
+  print(f'homography_amnt = {homography_amnt}')
+
   # Guarantee same size for .gif
   transformed_img = cv2.resize(transformed_img, (base_img_w, base_img_h), interpolation=cv2.INTER_AREA)
 
@@ -89,7 +96,7 @@ for other_img_path in glob.glob(os.path.join(imgs_folder, '*.png')):
   imgs_list.append( imageio.imread(normalized_img_path) )
 
   duration_s = time.time() - begin_s
-  print(f'{other_img_path} normalized in {duration_s:.2f}s')
+  print(f'{os.path.basename(other_img_path)} normalized to {normalized_img_path} in {duration_s:.2f}s')
 
 imageio.mimsave(os.path.join(normalized_imgs, 'all.gif'), imgs_list, fps=8, palettesize=1024)
 
