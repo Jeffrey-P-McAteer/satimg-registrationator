@@ -85,8 +85,10 @@ for other_img_path in glob.glob(os.path.join(imgs_folder, '*.png')):
   transformed_img = cv2.warpPerspective(other_img, homography, (base_img_w, base_img_h))
 
   #print(f'homography = {homography}')
-  homography_amnt = (homography[0][0] + homography[1][1] + homography[2][2])/3.0
-  print(f'homography_amnt = {homography_amnt}')
+  num, Rs, Ts, Ns  = cv2.decomposeHomographyMat(homography, numpy.identity(3) ) # ((1,0,0),(0,1,0),(0,0,1)) )
+  print(f'homography Rs = {Rs[0].mean()}')
+  print(f'homography Ts = {Ts[0].mean()}')
+  print(f'homography Ns = {Ns[0].mean()}')
 
   # Guarantee same size for .gif
   transformed_img = cv2.resize(transformed_img, (base_img_w, base_img_h), interpolation=cv2.INTER_AREA)
